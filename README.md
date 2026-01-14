@@ -6,6 +6,14 @@
 
 ---
 
+## Important Links
+
+**[Project Presentation (PPT)](https://drive.google.com/file/d/1lzzOIPlJJjwYpHEoQXNwGA2NarqneZNS/view?usp=sharing)**
+
+**[Figma Design ](https://www.figma.com/proto/0v6kcp24Z7cpbBQMf6Fe8o/fitquest?page-id=2%3A90&node-id=2-588&p=f&viewport=42%2C470%2C0.76&t=50131GTe5pSJDBjQ-1&scaling=scale-down&content-scaling=fixed)**
+
+---
+
 ## The Problem
 
 Most fitness apps are boring. They track steps and calories, but they don't make exercise feel exciting. People lose motivation quickly because there's no real engagement beyond numbers on a screen.
