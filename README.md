@@ -12,6 +12,11 @@
 
 **[Figma Design ](https://www.figma.com/proto/0v6kcp24Z7cpbBQMf6Fe8o/fitquest?page-id=2%3A90&node-id=2-588&p=f&viewport=42%2C470%2C0.76&t=50131GTe5pSJDBjQ-1&scaling=scale-down&content-scaling=fixed)**
 
+**Demo Videos:**
+- **[Mobile App Demo](https://youtube.com/shorts/4xjaG_Wc9VE?si=izOX_g5_AKefWgim)** - See the app in action on mobile
+- **[Info Video](https://youtube.com/shorts/b7mNNS133wg?si=XsNpP-_wqEeifIlR)** - Quick overview of FitQuest
+- **[Tab Screen Demo](https://youtu.be/nBJ5zjbP88g?si=0G2GUdb8mwci6Xdf)** - Complete walkthrough of all features
+
 ---
 
 ## The Problem
@@ -164,6 +169,33 @@ When fitness feels like a game, people stick with it. That's the difference FitQ
 - Global leaderboards with regional rankings
 
 We built the foundation. The possibilities are endless.
+
+---
+
+## Running on Web
+
+Want to try FitQuest in your browser? Follow these simple steps:
+
+**Step 1: Install Dependencies**
+```bash
+npm install
+```
+
+**Step 2: Start Web Server**
+```bash
+npm run web
+```
+
+**Step 3: Open Browser**
+- Automatically opens at `http://localhost:8081`
+- Or manually open your browser and visit the URL
+
+**Step 4: Explore the App**
+- Navigate through different screens using the bottom tab bar
+- Maps are powered by OpenStreetMap (free, no API key needed)
+- All features work on web except actual GPS tracking
+
+That's it! 🎉 Your FitQuest web app is running.
 
 ---
 
