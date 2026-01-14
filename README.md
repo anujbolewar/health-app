@@ -25,7 +25,31 @@ It combines fitness tracking with real-world exploration and friendly competitio
 ## System Architecture
 
 ```mermaid
+graph TD
+    U[User]
+    U --> M[Mobile App - React Native Expo]
 
+    M --> GPS[Device GPS]
+    M --> Sensors[Motion Sensors]
+
+    M --> Tracker[Activity Tracker]
+    Tracker --> TerritoryLogic[Territory Capture Logic]
+    TerritoryLogic --> Rewards[Points and Achievements]
+
+    M --> API[Backend API Server]
+
+    API --> Auth[Authentication Service]
+    API --> UserService[User Service]
+    API --> ActivityService[Activity Service]
+    API --> TerritoryService[Territory Service]
+    API --> LeaderboardService[Leaderboard Service]
+
+    UserService --> DB[(Database)]
+    ActivityService --> DB
+    TerritoryService --> DB
+    LeaderboardService --> DB
+
+    M --> MapSDK[Map SDK]
 ```
 
 ---
