@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useMemo } from "react";
 import {
   Animated,
   Dimensions,
@@ -12,9 +14,7 @@ import SafeMapView, {
   Polygon,
   PROVIDER_GOOGLE,
 } from "../components/SafeMapView";
-import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { COLORS } from "../constants/colors";
+import { COLORS } from "../constants/theme";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 

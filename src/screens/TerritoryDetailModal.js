@@ -1,4 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useEffect, useRef } from "react";
 import {
   Animated,
   Dimensions,
@@ -13,10 +16,7 @@ import SafeMapView, {
   Polygon,
   PROVIDER_GOOGLE,
 } from "../components/SafeMapView";
-import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { COLORS, GRADIENTS } from "../constants/colors";
+import { COLORS, GRADIENTS } from "../constants/theme";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 

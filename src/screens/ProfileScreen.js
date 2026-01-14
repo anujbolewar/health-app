@@ -1,4 +1,5 @@
-import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   SafeAreaView,
   ScrollView,
@@ -11,9 +12,7 @@ import SafeMapView, {
   Polygon,
   PROVIDER_GOOGLE,
 } from "../components/SafeMapView";
-import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
-import { COLORS } from "../constants/colors";
+import { COLORS } from "../constants/theme";
 
 const NAGPUR_COORD = { latitude: 21.1458, longitude: 79.0882 };
 

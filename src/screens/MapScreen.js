@@ -1,4 +1,8 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import * as Location from "expo-location";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   Easing,
@@ -8,10 +12,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
-import * as Location from "expo-location";
 import SafeMapView, {
   Marker,
   Polygon,
@@ -42,7 +42,10 @@ const createHexagon = (lat, lng, radius = HEX_RADIUS) => {
     const dy = radius * Math.sin(angle);
     points.push({
       latitude: lat + (dy / EARTH_RADIUS) * (180 / Math.PI),
-      longitude: lng + ((dx / EARTH_RADIUS) * (180 / Math.PI)) / Math.cos((lat * Math.PI) / 180),
+      longitude:
+        lng +
+        ((dx / EARTH_RADIUS) * (180 / Math.PI)) /
+          Math.cos((lat * Math.PI) / 180),
     });
   }
   return points;
@@ -57,32 +60,89 @@ const buildTerritories = () => {
     }));
 
   const yours = [
-    { latitude: BASE_LOCATION.latitude + 0.0042, longitude: BASE_LOCATION.longitude },
-    { latitude: BASE_LOCATION.latitude + 0.0036, longitude: BASE_LOCATION.longitude + 0.0048 },
-    { latitude: BASE_LOCATION.latitude + 0.0008, longitude: BASE_LOCATION.longitude + 0.0054 },
-    { latitude: BASE_LOCATION.latitude - 0.0018, longitude: BASE_LOCATION.longitude + 0.0036 },
-    { latitude: BASE_LOCATION.latitude - 0.0024, longitude: BASE_LOCATION.longitude - 0.0004 },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0042,
+      longitude: BASE_LOCATION.longitude,
+    },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0036,
+      longitude: BASE_LOCATION.longitude + 0.0048,
+    },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0008,
+      longitude: BASE_LOCATION.longitude + 0.0054,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.0018,
+      longitude: BASE_LOCATION.longitude + 0.0036,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.0024,
+      longitude: BASE_LOCATION.longitude - 0.0004,
+    },
   ];
 
   const others = [
-    { latitude: BASE_LOCATION.latitude + 0.0052, longitude: BASE_LOCATION.longitude - 0.0038 },
-    { latitude: BASE_LOCATION.latitude + 0.0022, longitude: BASE_LOCATION.longitude - 0.0048 },
-    { latitude: BASE_LOCATION.latitude - 0.0008, longitude: BASE_LOCATION.longitude - 0.0042 },
-    { latitude: BASE_LOCATION.latitude - 0.0032, longitude: BASE_LOCATION.longitude - 0.003 },
-    { latitude: BASE_LOCATION.latitude - 0.0046, longitude: BASE_LOCATION.longitude + 0.0018 },
-    { latitude: BASE_LOCATION.latitude - 0.003, longitude: BASE_LOCATION.longitude + 0.0058 },
-    { latitude: BASE_LOCATION.latitude + 0.0014, longitude: BASE_LOCATION.longitude + 0.0082 },
-    { latitude: BASE_LOCATION.latitude + 0.0046, longitude: BASE_LOCATION.longitude + 0.007 },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0052,
+      longitude: BASE_LOCATION.longitude - 0.0038,
+    },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0022,
+      longitude: BASE_LOCATION.longitude - 0.0048,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.0008,
+      longitude: BASE_LOCATION.longitude - 0.0042,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.0032,
+      longitude: BASE_LOCATION.longitude - 0.003,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.0046,
+      longitude: BASE_LOCATION.longitude + 0.0018,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.003,
+      longitude: BASE_LOCATION.longitude + 0.0058,
+    },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0014,
+      longitude: BASE_LOCATION.longitude + 0.0082,
+    },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0046,
+      longitude: BASE_LOCATION.longitude + 0.007,
+    },
   ];
 
   const available = [
     TARGET_TERRITORY,
-    { latitude: BASE_LOCATION.latitude + 0.0054, longitude: BASE_LOCATION.longitude - 0.007 },
-    { latitude: BASE_LOCATION.latitude + 0.0018, longitude: BASE_LOCATION.longitude - 0.0072 },
-    { latitude: BASE_LOCATION.latitude - 0.0012, longitude: BASE_LOCATION.longitude - 0.0062 },
-    { latitude: BASE_LOCATION.latitude - 0.0048, longitude: BASE_LOCATION.longitude - 0.0014 },
-    { latitude: BASE_LOCATION.latitude - 0.0056, longitude: BASE_LOCATION.longitude + 0.0036 },
-    { latitude: BASE_LOCATION.latitude - 0.001, longitude: BASE_LOCATION.longitude + 0.0076 },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0054,
+      longitude: BASE_LOCATION.longitude - 0.007,
+    },
+    {
+      latitude: BASE_LOCATION.latitude + 0.0018,
+      longitude: BASE_LOCATION.longitude - 0.0072,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.0012,
+      longitude: BASE_LOCATION.longitude - 0.0062,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.0048,
+      longitude: BASE_LOCATION.longitude - 0.0014,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.0056,
+      longitude: BASE_LOCATION.longitude + 0.0036,
+    },
+    {
+      latitude: BASE_LOCATION.latitude - 0.001,
+      longitude: BASE_LOCATION.longitude + 0.0076,
+    },
   ];
 
   return [
@@ -167,7 +227,10 @@ const MapScreen = () => {
       status: "Currently Unclaimed",
       distanceRequired: "Run 1.5 km in this zone",
       reward: "+150 points",
-      polygon: createHexagon(TARGET_TERRITORY.latitude, TARGET_TERRITORY.longitude),
+      polygon: createHexagon(
+        TARGET_TERRITORY.latitude,
+        TARGET_TERRITORY.longitude
+      ),
       center: TARGET_TERRITORY,
     });
   };
@@ -206,8 +269,15 @@ const MapScreen = () => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.captureBtn} activeOpacity={0.9} onPress={startCapture}>
-        <LinearGradient colors={["#FF6B6B", "#FF8E53"]} style={styles.btnGradient}>
+      <TouchableOpacity
+        style={styles.captureBtn}
+        activeOpacity={0.9}
+        onPress={startCapture}
+      >
+        <LinearGradient
+          colors={["#FF6B6B", "#FF8E53"]}
+          style={styles.btnGradient}
+        >
           <Ionicons name="flash" size={18} color={COLORS.card} />
           <Text style={styles.btnText}>Capture Territory</Text>
         </LinearGradient>
@@ -218,65 +288,12 @@ const MapScreen = () => {
         activeOpacity={0.9}
         onPress={() => navigation.navigate("FreeFlowCapture")}
       >
-        <LinearGradient colors={["#4CAF50", "#45a049"]} style={styles.btnGradient}>
-          <Ionicons name="walk" size={18} color={COLORS.card} />
-          <Text style={styles.btnText}>Free-Flow Mode</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    </SafeAreaView>
-  );
-};
-          </View>
-        </Marker>
-      </SafeMapView>
-
-      <View style={styles.topBar}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>FQ</Text>
-        </View>
-        <View style={styles.badge}>
-          <Ionicons name="grid" size={14} color={COLORS.card} />
-          <Text style={[styles.badgeText, styles.leftPadSmall]}>
-            8 Territories
-          </Text>
-        </View>
-        <View style={styles.pointsRow}>
-          <Ionicons name="trophy" size={16} color="#FFD166" />
-          <Text style={[styles.pointsText, styles.leftPadSmaller]}>
-            2,450 Points
-          </Text>
-        </View>
-      </View>
-
-      <TouchableOpacity
-        style={styles.captureButton}
-        activeOpacity={0.9}
-        onPress={handleCapturePress}
-      >
-        <LinearGradient
-          colors={["#FF6B6B", "#FF8E53"]}
-          style={styles.captureGradient}
-        >
-          <Ionicons name="flash" size={18} color={COLORS.card} />
-          <Text style={[styles.captureText, styles.leftPadSmall]}>
-            Capture Territory
-          </Text>
-        </LinearGradient>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.freeFlowButton}
-        activeOpacity={0.9}
-        onPress={() => navigation.navigate("FreeFlowCapture")}
-      >
         <LinearGradient
           colors={["#4CAF50", "#45a049"]}
-          style={styles.captureGradient}
+          style={styles.btnGradient}
         >
           <Ionicons name="walk" size={18} color={COLORS.card} />
-          <Text style={[styles.captureText, styles.leftPadSmall]}>
-            Free-Flow Mode
-          </Text>
+          <Text style={styles.btnText}>Free-Flow Mode</Text>
         </LinearGradient>
       </TouchableOpacity>
     </SafeAreaView>

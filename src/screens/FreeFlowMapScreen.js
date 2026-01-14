@@ -25,7 +25,7 @@ import SafeMapView, {
   Polyline,
   PROVIDER_GOOGLE,
 } from "../components/SafeMapView";
-import { COLORS } from "../constants/colors";
+import { COLORS } from "../constants/theme";
 import { getTerritoryCaptureService } from "../services/TerritoryCaptureService";
 
 const NAGPUR_COORD = { latitude: 21.1458, longitude: 79.0882 };
