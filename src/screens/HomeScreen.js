@@ -1,64 +1,65 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Location from "expo-location";
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 import ScreenContainer from "../components/ScreenContainer";
-import { COLORS, GRADIENTS } from "../constants/colors";
+import { COLORS, GRADIENTS } from "../constants/theme";
 
-const quickStats = [
+const STATS = [
   { label: "Weekly Steps", value: "48,120" },
   { label: "Move Goal", value: "92%" },
   { label: "Active Minutes", value: "74 min" },
 ];
 
-const HomeScreen = () => {
-  const [locationMessage, setLocationMessage] = useState(
-    "Location access has not been requested yet."
-  );
+const DEFAULT_MESSAGE = "Tap below to check your location";
+const PERMISSION_DENIED =
+  "Location access denied. Enable in settings to continue.";
+const ERROR_MESSAGE = "Unable to get location. Please try again.";
 
-  const handleCheckLocation = async () => {
+const HomeScreen = () => {
+  const [locationStatus, setLocationStatus] = useState(DEFAULT_MESSAGE);
+
+  const requestLocation = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
+
       if (status !== "granted") {
-        setLocationMessage(
-          "Permission denied. Enable location in settings to use maps."
-        );
+        setLocationStatus(PERMISSION_DENIED);
         return;
       }
 
-      const position = await Location.getCurrentPositionAsync({});
-      const { latitude, longitude } = position.coords;
-      setLocationMessage(
-        `Location ready at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
+      const { coords } = await Location.getCurrentPositionAsync({});
+      setLocationStatus(
+        `Location: ${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(
+          4
+        )}`
       );
-    } catch (_error) {
-      setLocationMessage(
-        "Unable to read location right now. Try again in a moment."
-      );
+    } catch {
+      setLocationStatus(ERROR_MESSAGE);
     }
   };
 
   return (
     <ScreenContainer>
-      <View style={styles.heroWrapper}>
+      <View style={styles.hero}>
         <LinearGradient colors={GRADIENTS.hero} style={styles.heroCard}>
-          <Text style={styles.heroTitle}>Welcome to FitQuest</Text>
-          <Text style={styles.heroSubtitle}>
+          <Text style={styles.title}>Welcome to FitQuest</Text>
+          <Text style={styles.subtitle}>
             Track movement, explore routes, and stay on pace.
           </Text>
-          <PrimaryButton label="Check location" onPress={handleCheckLocation} />
-          <Text style={styles.locationMessage}>{locationMessage}</Text>
+          <PrimaryButton label="Check location" onPress={requestLocation} />
+          <Text style={styles.status}>{locationStatus}</Text>
         </LinearGradient>
       </View>
 
-      <View style={styles.sectionHeaderRow}>
+      <View style={styles.header}>
         <Text style={styles.sectionTitle}>Today</Text>
-        <Text style={styles.sectionHint}>Synced just now</Text>
+        <Text style={styles.hint}>Synced just now</Text>
       </View>
 
-      <View style={styles.statsRow}>
-        {quickStats.map((stat) => (
+      <View style={styles.stats}>
+        {STATS.map((stat) => (
           <View key={stat.label} style={styles.statCard}>
             <Text style={styles.statValue}>{stat.value}</Text>
             <Text style={styles.statLabel}>{stat.label}</Text>
@@ -70,7 +71,7 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  heroWrapper: {
+  hero: {
     marginTop: 16,
     marginBottom: 18,
   },
@@ -84,25 +85,25 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     elevation: 6,
   },
-  heroTitle: {
+  title: {
     color: COLORS.card,
     fontSize: 22,
     fontWeight: "800",
     letterSpacing: 0.3,
   },
-  heroSubtitle: {
+  subtitle: {
     color: COLORS.card,
     opacity: 0.9,
     fontSize: 15,
     lineHeight: 20,
   },
-  locationMessage: {
+  status: {
     color: COLORS.card,
     opacity: 0.9,
     fontSize: 13,
     marginTop: 4,
   },
-  sectionHeaderRow: {
+  header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -114,11 +115,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: COLORS.text,
   },
-  sectionHint: {
+  hint: {
     color: COLORS.muted,
     fontSize: 13,
   },
-  statsRow: {
+  stats: {
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 12,

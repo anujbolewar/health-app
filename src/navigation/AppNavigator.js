@@ -1,40 +1,35 @@
-import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
-  createStackNavigator,
   CardStyleInterpolators,
+  createStackNavigator,
 } from "@react-navigation/stack";
-import { Text, View, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet, Text, View } from "react-native";
+import { COLORS, GRADIENTS } from "../constants/theme";
+import ActivityTrackingScreen from "../screens/ActivityTrackingScreen";
+import CaptureSuccessScreen from "../screens/CaptureSuccessScreen";
+import FreeFlowMapScreen from "../screens/FreeFlowMapScreen";
+import LeaderboardScreen from "../screens/LeaderboardScreen";
 import MapScreen from "../screens/MapScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import ActivityTrackingScreen from "../screens/ActivityTrackingScreen";
-import LeaderboardScreen from "../screens/LeaderboardScreen";
 import TerritoryDetailModal from "../screens/TerritoryDetailModal";
-import CaptureSuccessScreen from "../screens/CaptureSuccessScreen";
-import { COLORS, GRADIENTS } from "../constants/theme";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const TabIcon = ({ focused, icon, label }) => {
-  if (focused) {
-    return (
-      <LinearGradient colors={GRADIENTS.primary} style={styles.activeIconWrap}>
-        <Ionicons name={icon} size={20} color={COLORS.card} />
-        <Text style={styles.activeLabel}>{label}</Text>
-      </LinearGradient>
-    );
-  }
-
-  return (
-    <View style={styles.inactiveIconWrap}>
-      <Ionicons name={icon} size={20} color="#999999" />
+const TabIcon = ({ focused, icon, label }) =>
+  focused ? (
+    <LinearGradient colors={GRADIENTS.primary} style={styles.activeTab}>
+      <Ionicons name={icon} size={20} color={COLORS.card} />
+      <Text style={styles.activeLabel}>{label}</Text>
+    </LinearGradient>
+  ) : (
+    <View style={styles.inactiveTab}>
+      <Ionicons name={icon} size={20} color={COLORS.muted} />
       <Text style={styles.inactiveLabel}>{label}</Text>
     </View>
   );
-};
 
 const Tabs = () => (
   <Tab.Navigator
@@ -89,6 +84,13 @@ const AppNavigator = () => (
     <Stack.Screen name="Tabs" component={Tabs} />
     <Stack.Screen name="ActivityTracking" component={ActivityTrackingScreen} />
     <Stack.Screen
+      name="FreeFlowCapture"
+      component={FreeFlowMapScreen}
+      options={{
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
+    />
+    <Stack.Screen
       name="TerritoryDetail"
       component={TerritoryDetailModal}
       options={{
@@ -115,9 +117,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
     paddingHorizontal: 10,
     shadowColor: "#000",
     shadowOpacity: 0.08,
@@ -125,26 +124,26 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 10,
   },
-  activeIconWrap: {
+  activeTab: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 16,
   },
-  inactiveIconWrap: {
+  inactiveTab: {
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 6,
   },
   activeLabel: {
     color: COLORS.card,
-    marginLeft: 8,
     fontWeight: "800",
     fontSize: 12,
   },
   inactiveLabel: {
-    color: "#999999",
+    color: COLORS.muted,
     fontWeight: "700",
     marginTop: 4,
     fontSize: 12,

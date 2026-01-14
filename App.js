@@ -1,15 +1,14 @@
-import "react-native-gesture-handler";
-import React from "react";
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { enableScreens } from "react-native-screens";
-import AppNavigator from "./src/navigation/AppNavigator";
 import { COLORS } from "./src/constants/theme";
+import AppNavigator from "./src/navigation/AppNavigator";
 
 enableScreens();
 
-const navTheme = {
+const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
@@ -23,7 +22,7 @@ const navTheme = {
 
 const App = () => (
   <SafeAreaProvider>
-    <NavigationContainer theme={navTheme}>
+    <NavigationContainer theme={theme}>
       <AppNavigator />
       <StatusBar style="dark" backgroundColor={COLORS.card} />
     </NavigationContainer>

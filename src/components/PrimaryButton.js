@@ -1,35 +1,37 @@
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { COLORS, GRADIENTS } from "../constants/colors";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { COLORS, GRADIENTS } from "../constants/theme";
 
-const PrimaryButton = ({ label, onPress }) => (
+const PrimaryButton = ({ label, onPress, disabled }) => (
   <TouchableOpacity
     activeOpacity={0.85}
     onPress={onPress}
-    style={styles.touchable}
+    disabled={disabled}
+    style={[styles.container, disabled && styles.disabled]}
   >
     <LinearGradient colors={GRADIENTS.action} style={styles.gradient}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.text}>{label}</Text>
     </LinearGradient>
   </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
-  touchable: {
+  container: {
     borderRadius: 12,
     overflow: "hidden",
+  },
+  disabled: {
+    opacity: 0.5,
   },
   gradient: {
     paddingVertical: 14,
     alignItems: "center",
-    borderRadius: 12,
   },
-  label: {
+  text: {
     color: COLORS.card,
     fontWeight: "700",
     fontSize: 16,
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
   },
 });
 

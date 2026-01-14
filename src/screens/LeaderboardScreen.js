@@ -1,4 +1,3 @@
-import React, { useMemo } from "react";
 import {
   Image,
   SafeAreaView,
@@ -7,118 +6,103 @@ import {
   Text,
   View,
 } from "react-native";
-import { COLORS } from "../constants/colors";
+import { COLORS } from "../constants/theme";
 
-const podium = [
+const AVATAR_URL = "https://placehold.co/120x120";
+
+const PODIUM_USERS = [
   { rank: 2, name: "Amit Patel", points: 3800, medal: "🥈" },
   { rank: 1, name: "Priya Sharma", points: 4200, medal: "🥇" },
   { rank: 3, name: "Neha Singh", points: 3100, medal: "🥉" },
 ];
 
-const listRanks = [
+const LEADERBOARD = [
   { rank: 4, name: "Vikram", points: 2850 },
   { rank: 5, name: "Sneha", points: 2700 },
   { rank: 6, name: "Rohan", points: 2600 },
-  { rank: 7, name: "Raj Kumar", points: 2450, you: true },
+  { rank: 7, name: "Raj Kumar", points: 2450, isUser: true },
   { rank: 8, name: "Kavya", points: 2200 },
   { rank: 9, name: "Arjun", points: 2100 },
   { rank: 10, name: "Diya", points: 1950 },
 ];
 
-const placeholder = "https://placehold.co/120x120";
+const TABS = ["Daily", "Weekly", "Monthly", "All-Time"];
 
 const LeaderboardScreen = () => {
-  const tabs = useMemo(() => ["Daily", "Weekly", "Monthly", "All-Time"], []);
-
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.tabsRow}>
-          {tabs.map((tab) => {
-            const selected = tab === "Weekly";
-            return (
-              <View
-                key={tab}
-                style={[styles.tab, selected && styles.tabSelected]}
-              >
-                <Text
-                  style={[styles.tabText, selected && styles.tabTextSelected]}
-                >
-                  {tab}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={styles.rankCard}>
-          <Text style={styles.rankLabel}>Your Rank</Text>
-          <Text style={styles.rankNumber}>#7</Text>
-          <Text style={styles.rankPoints}>2,450 Points</Text>
-        </View>
-
-        <View style={styles.podiumRow}>
-          {podium.map((item, idx) => (
+        <View style={styles.tabs}>
+          {TABS.map((tab) => (
             <View
-              key={item.rank}
-              style={[
-                styles.podiumCard,
-                idx === 1 && styles.podiumCenter,
-                idx !== 1 && styles.podiumSide,
-              ]}
+              key={tab}
+              style={[styles.tab, tab === "Weekly" && styles.tabActive]}
             >
-              <Text style={styles.medal}>{item.medal}</Text>
-              <Image
-                source={{ uri: placeholder }}
-                style={styles.podiumAvatar}
-              />
-              <Text style={styles.podiumName}>{item.name}</Text>
-              <Text style={styles.podiumPoints}>
-                {item.points.toLocaleString()} pts
+              <Text
+                style={[
+                  styles.tabText,
+                  tab === "Weekly" && styles.tabTextActive,
+                ]}
+              >
+                {tab}
               </Text>
             </View>
           ))}
         </View>
 
-        <View style={styles.listCard}>
-          {listRanks.map((item) => {
-            const highlight = item.you;
-            return (
-              <View
-                key={item.rank}
-                style={[styles.row, highlight && styles.rowHighlight]}
-              >
+        <View style={styles.rankCard}>
+          <Text style={styles.rankLabel}>Your Rank</Text>
+          <Text style={styles.rankValue}>#7</Text>
+          <Text style={styles.rankPoints}>2,450 Points</Text>
+        </View>
+
+        <View style={styles.podium}>
+          {PODIUM_USERS.map((user, idx) => (
+            <View
+              key={user.rank}
+              style={[
+                styles.podiumCard,
+                idx === 1 ? styles.podiumFirst : styles.podiumOther,
+              ]}
+            >
+              <Text style={styles.medal}>{user.medal}</Text>
+              <Image source={{ uri: AVATAR_URL }} style={styles.podiumAvatar} />
+              <Text style={styles.podiumName}>{user.name}</Text>
+              <Text style={styles.podiumPoints}>
+                {user.points.toLocaleString()} pts
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.list}>
+          {LEADERBOARD.map((user) => (
+            <View
+              key={user.rank}
+              style={[styles.listItem, user.isUser && styles.listItemActive]}
+            >
+              <Text style={[styles.listRank, user.isUser && styles.textActive]}>
+                {user.rank}.
+              </Text>
+              <Image source={{ uri: AVATAR_URL }} style={styles.listAvatar} />
+              <View style={styles.listInfo}>
                 <Text
-                  style={[styles.rowRank, highlight && styles.rowTextHighlight]}
+                  style={[styles.listName, user.isUser && styles.textActive]}
                 >
-                  {item.rank}.
+                  {user.name}
+                  {user.isUser && "  (YOU)"}
                 </Text>
-                <Image source={{ uri: placeholder }} style={styles.rowAvatar} />
-                <View style={styles.rowInfo}>
-                  <Text
-                    style={[
-                      styles.rowName,
-                      highlight && styles.rowTextHighlight,
-                    ]}
-                  >
-                    {item.name}
-                    {highlight ? "  (YOU)" : ""}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.rowPoints,
-                      highlight && styles.rowTextHighlight,
-                    ]}
-                  >
-                    {item.points.toLocaleString()} pts
-                  </Text>
-                </View>
+                <Text
+                  style={[styles.listPoints, user.isUser && styles.textActive]}
+                >
+                  {user.points.toLocaleString()} pts
+                </Text>
               </View>
-            );
-          })}
+            </View>
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -126,15 +110,15 @@ const LeaderboardScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
+  container: {
     flex: 1,
-    backgroundColor: "#F4F7FB",
+    backgroundColor: COLORS.background,
   },
   content: {
     padding: 16,
     paddingBottom: 24,
   },
-  tabsRow: {
+  tabs: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 12,
@@ -147,14 +131,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     backgroundColor: COLORS.card,
   },
-  tabSelected: {
+  tabActive: {
     backgroundColor: COLORS.primary,
   },
   tabText: {
     color: COLORS.text,
     fontWeight: "700",
   },
-  tabTextSelected: {
+  tabTextActive: {
     color: COLORS.card,
   },
   rankCard: {
@@ -173,7 +157,7 @@ const styles = StyleSheet.create({
     color: COLORS.muted,
     marginBottom: 6,
   },
-  rankNumber: {
+  rankValue: {
     fontSize: 28,
     fontWeight: "900",
     color: COLORS.text,
@@ -183,7 +167,7 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "800",
   },
-  podiumRow: {
+  podium: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 14,
@@ -201,10 +185,10 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 5,
   },
-  podiumCenter: {
+  podiumFirst: {
     transform: [{ translateY: -8 }],
   },
-  podiumSide: {
+  podiumOther: {
     transform: [{ translateY: 4 }],
   },
   medal: {
@@ -216,6 +200,7 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     marginBottom: 8,
+    backgroundColor: COLORS.border,
   },
   podiumName: {
     fontWeight: "800",
@@ -225,7 +210,7 @@ const styles = StyleSheet.create({
     color: COLORS.muted,
     marginTop: 4,
   },
-  listCard: {
+  list: {
     backgroundColor: COLORS.card,
     borderRadius: 16,
     paddingVertical: 4,
@@ -236,7 +221,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 4,
   },
-  row: {
+  listItem: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 10,
@@ -244,32 +229,32 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#EEF1F5",
   },
-  rowHighlight: {
+  listItemActive: {
     backgroundColor: "#FFF8D6",
   },
-  rowRank: {
+  listRank: {
     width: 28,
     fontWeight: "800",
     color: COLORS.text,
   },
-  rowAvatar: {
+  listAvatar: {
     width: 44,
     height: 44,
     borderRadius: 22,
     marginHorizontal: 10,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: COLORS.border,
   },
-  rowInfo: {
+  listInfo: {
     flex: 1,
   },
-  rowName: {
+  listName: {
     fontWeight: "700",
     color: COLORS.text,
   },
-  rowPoints: {
+  listPoints: {
     color: COLORS.muted,
   },
-  rowTextHighlight: {
+  textActive: {
     color: "#A66400",
     fontWeight: "800",
   },

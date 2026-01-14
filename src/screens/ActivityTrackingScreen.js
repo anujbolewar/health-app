@@ -1,10 +1,7 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
   StyleSheet,
@@ -17,80 +14,70 @@ import SafeMapView, {
   Polygon,
   PROVIDER_GOOGLE,
 } from "../components/SafeMapView";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { COLORS, GRADIENTS } from "../constants/colors";
-import { LinearGradient } from "expo-linear-gradient";
+import { COLORS, GRADIENTS } from "../constants/theme";
 
-const TARGET_DISTANCE = 1.5;
-const AUTO_COMPLETE_SECONDS = 15;
+const TARGET_KM = 1.5;
+const DURATION_SEC = 15;
 
 const ActivityTrackingScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { name = "Janwada Area", polygon = [], center } = route.params || {};
+  const timerRef = useRef(null);
 
   const [elapsed, setElapsed] = useState(0);
   const [distance, setDistance] = useState(0.4);
   const [completed, setCompleted] = useState(false);
-  const timerRef = useRef(null);
 
-  const progress = Math.min(distance / TARGET_DISTANCE, 1);
+  const progress = Math.min(distance / TARGET_KM, 1);
 
-  const formattedElapsed = useMemo(() => {
-    const minutes = Math.floor(elapsed / 60)
+  const timeDisplay = useMemo(() => {
+    const min = Math.floor(elapsed / 60)
       .toString()
       .padStart(2, "0");
-    const seconds = Math.floor(elapsed % 60)
+    const sec = Math.floor(elapsed % 60)
       .toString()
       .padStart(2, "0");
-    return `${minutes}:${seconds}`;
+    return `${min}:${sec}`;
   }, [elapsed]);
 
   useEffect(() => {
     timerRef.current = setInterval(() => {
       setElapsed((prev) => prev + 1);
       setDistance((prev) =>
-        Math.min(
-          TARGET_DISTANCE,
-          prev + TARGET_DISTANCE / AUTO_COMPLETE_SECONDS
-        )
+        Math.min(TARGET_KM, prev + TARGET_KM / DURATION_SEC)
       );
     }, 1000);
 
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
+    return () => clearInterval(timerRef.current);
   }, []);
 
-  const completeCapture = useCallback(() => {
+  const finishCapture = useCallback(() => {
     if (completed) return;
+
     setCompleted(true);
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
+    clearInterval(timerRef.current);
+
     navigation.replace("CaptureSuccess", {
       name,
-      distance: TARGET_DISTANCE,
+      distance: TARGET_KM,
       time: "15:30",
       calories: 120,
       points: 150,
       polygon,
       center,
     });
-  }, [center, completed, navigation, name, polygon]);
+  }, [completed, navigation, name, polygon, center]);
 
   useEffect(() => {
-    if (!completed && elapsed >= AUTO_COMPLETE_SECONDS) {
-      completeCapture();
+    if (!completed && elapsed >= DURATION_SEC) {
+      finishCapture();
     }
-  }, [elapsed, completed, completeCapture]);
+  }, [elapsed, completed, finishCapture]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.mapWrapper}>
+      <View style={styles.mapContainer}>
         <SafeMapView
           style={styles.map}
           provider={PROVIDER_GOOGLE}
@@ -110,17 +97,16 @@ const ActivityTrackingScreen = () => {
             />
           )}
         </SafeMapView>
-        <View style={styles.timerBadge}>
+        <View style={styles.timer}>
           <Ionicons name="time" size={16} color={COLORS.card} />
-          <Text style={styles.timerText}>{formattedElapsed}</Text>
+          <Text style={styles.timerText}>{timeDisplay}</Text>
         </View>
       </View>
 
-      <View style={styles.infoCard}>
-        <Text style={styles.sectionTitle}>Capture: {name}</Text>
-        <Text style={styles.progressLabel}>
-          Distance in zone: {distance.toFixed(1)}km /{" "}
-          {TARGET_DISTANCE.toFixed(1)}km
+      <View style={styles.controls}>
+        <Text style={styles.title}>Capture: {name}</Text>
+        <Text style={styles.subtitle}>
+          Distance: {distance.toFixed(1)}km / {TARGET_KM.toFixed(1)}km
         </Text>
         <View style={styles.progressBar}>
           <Animated.View
@@ -130,14 +116,11 @@ const ActivityTrackingScreen = () => {
 
         <TouchableOpacity
           activeOpacity={0.92}
-          onPress={completeCapture}
-          style={styles.stopButton}
+          onPress={finishCapture}
+          style={styles.button}
         >
-          <LinearGradient
-            colors={["#FF6B6B", "#FF8E53"]}
-            style={styles.stopGradient}
-          >
-            <Text style={styles.stopLabel}>STOP</Text>
+          <LinearGradient colors={GRADIENTS.primary} style={styles.gradient}>
+            <Text style={styles.buttonText}>STOP</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
@@ -150,13 +133,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  mapWrapper: {
+  mapContainer: {
     flex: 1,
   },
   map: {
     flex: 1,
   },
-  timerBadge: {
+  timer: {
     position: "absolute",
     top: 16,
     right: 16,
@@ -166,13 +149,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
+    gap: 8,
   },
   timerText: {
     color: COLORS.card,
     fontWeight: "700",
-    marginLeft: 8,
   },
-  infoCard: {
+  controls: {
     padding: 16,
     backgroundColor: COLORS.card,
     borderTopLeftRadius: 18,
@@ -180,13 +163,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  sectionTitle: {
+  title: {
     fontSize: 18,
     fontWeight: "800",
     color: COLORS.text,
     marginBottom: 6,
   },
-  progressLabel: {
+  subtitle: {
     color: COLORS.muted,
     marginBottom: 10,
     fontSize: 14,
@@ -202,15 +185,15 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: GRADIENTS.action[0],
   },
-  stopButton: {
+  button: {
     borderRadius: 14,
     overflow: "hidden",
   },
-  stopGradient: {
+  gradient: {
     alignItems: "center",
     paddingVertical: 14,
   },
-  stopLabel: {
+  buttonText: {
     color: COLORS.card,
     fontWeight: "800",
     letterSpacing: 0.3,

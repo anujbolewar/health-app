@@ -1,20 +1,19 @@
-import React from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS } from "../constants/colors";
+import { COLORS } from "../constants/theme";
 
-const ScreenContainer = ({ children }) => (
-  <SafeAreaView style={styles.safeArea}>
-    <View style={styles.inner}>{children}</View>
+const ScreenContainer = ({ children, style }) => (
+  <SafeAreaView style={styles.safe}>
+    <View style={[styles.content, style]}>{children}</View>
   </SafeAreaView>
 );
 
 const styles = StyleSheet.create({
-  safeArea: {
+  safe: {
     flex: 1,
     backgroundColor: COLORS.background,
   },
-  inner: {
+  content: {
     flex: 1,
     paddingHorizontal: 16,
   },
