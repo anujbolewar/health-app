@@ -105,12 +105,6 @@ Here's how everything comes together. From the home screen to activity tracking 
 - React Native Linear Gradient for modern UI
 - Custom components with consistent design system
 
-**Why These Choices:**
-- Cross-platform support (iOS, Android, Web)
-- Fast development with Expo
-- Native performance where it matters
-- Easy to maintain and extend
-
 ---
 
 ## Why This Project Matters
@@ -126,7 +120,7 @@ Fitness apps are everywhere, but most people stop using them after a few weeks. 
 When fitness feels like a game, people stick with it. That's the difference FitQuest makes.
 
 ---
-## How to Run
+## How to Run 
 
 **Quick Start:**
 
